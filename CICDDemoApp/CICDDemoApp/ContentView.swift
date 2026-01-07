@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var count = 0
+    @State private var count = 1
 
     var body: some View {
         VStack(spacing: 20) {
