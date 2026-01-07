@@ -1,22 +1,32 @@
-name: iOS CI
+name: CI
 
 on:
-  pull_request:
   push:
     branches: [ main ]
-  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build-and-test:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3' # Matches the Ruby version in your logs
+          bundler-cache: false # We will handle bundler manually to avoid version conflicts
 
-      - name: Run CI lane
-        run: bundle exec fastlane ci --non_interactive
+      - name: Install Bundler 2.x
+        run: gem install bundler:2.5.11
+
+      - name: Install Dependencies
+        run: bundle _2.5.11_ install
         working-directory: CICDDemoApp
 
+      - name: Run Fastlane
+        run: bundle _2.5.11_ exec fastlane ci --non_interactive
+        working-directory: CICDDemoApp
